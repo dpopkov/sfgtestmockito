@@ -13,3 +13,6 @@
 * Verify interactions with Mockito Mocks: `Mockito.verify(mock)`
 * Return values from Mocks: `when(repository.findById(ID)).thenReturn(Optional.of(speciality))`
 * Argument matchers: `verify(specialtyRepository).delete(any(Speciality.class))`
+* BDD Mockito
+    * given(methodCall).willReturn(value)
+    * then(mock).should().methodCall(arg)

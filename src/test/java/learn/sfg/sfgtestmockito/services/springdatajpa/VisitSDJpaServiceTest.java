@@ -16,6 +16,8 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -51,6 +53,23 @@ class VisitSDJpaServiceTest {
 
         assertThat(found.getId()).isEqualTo(ID);
         verify(visitRepository).findById(anyLong());
+    }
+
+    @DisplayName("Test Find by ID using BDD Mockito")
+    @Test
+    void findByIdBddTest() {
+        // Given
+        Visit visit = new Visit(ID);
+        given(visitRepository.findById(ID)).willReturn(Optional.of(visit));
+
+        // When
+        final Visit found = service.findById(ID);
+
+        // Then
+        assertThat(found).isNotNull();
+        assertThat(found.getId()).isEqualTo(ID);
+        then(visitRepository).should().findById(anyLong());
+        then(visitRepository).shouldHaveNoMoreInteractions();
     }
 
     @DisplayName("Test Save")
