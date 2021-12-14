@@ -17,6 +17,8 @@
     * given(methodCall).willReturn(value)
     * then(mock).should().methodCall(arg)
 * Throwing Exceptions with Mockito
-    * Mockito.doThrow(Throwable).when(mock).methodCall()
-    * BDDMockito.given(methodCall).willThrow(Throwable)         -- if methodCall returns something
-    * BDDMockito.willThrow(Throwable).given(mock).methodCall()  -- if methodCall returns void
+    * Mockito.__doThrow__(Throwable).when(mock).methodCall()
+    * BDDMockito.given(methodCall).__willThrow__(Throwable)         -- if methodCall returns something
+    * BDDMockito.__willThrow__(Throwable).given(mock).methodCall()  -- if methodCall returns void
+* Java Lambda Argument Matchers
+    * given(repository.save(__argThat__(arg -> arg.getValue().equals(VALUE)))).willReturn(savedObject);

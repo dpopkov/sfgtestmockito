@@ -110,4 +110,23 @@ class SpecialitySDJpaServiceTest {
 
         then(specialtyRepository).should().delete(any(Speciality.class));
     }
+
+    @Test
+    void testSaveLambda() {
+        // Given
+        final String MATCH_ME = "MATCH_ME";
+        Speciality speciality = new Speciality(MATCH_ME);
+
+        Speciality savedSpeciality = new Speciality();
+        savedSpeciality.setId(1L);
+        // need mock to only return on match MATCH_ME string
+        given(specialtyRepository.save(argThat(arg -> arg.getDescription().equals(MATCH_ME))))
+                .willReturn(savedSpeciality);
+
+        // When
+        Speciality returnedSpeciality = service.save(speciality);
+
+        // Then
+        assertThat(returnedSpeciality.getId()).isEqualTo(1L);
+    }
 }
