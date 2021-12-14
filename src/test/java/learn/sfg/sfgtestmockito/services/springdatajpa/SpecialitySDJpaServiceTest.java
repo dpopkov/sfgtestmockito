@@ -11,7 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SpecialitySDJpaServiceTest {
@@ -24,50 +24,62 @@ class SpecialitySDJpaServiceTest {
 
     @Test
     void testFindById() {
+        // Given
         Speciality speciality = new Speciality(ID, "test");
-        when(specialtyRepository.findById(ID)).thenReturn(Optional.of(speciality));
-
+        given(specialtyRepository.findById(ID)).willReturn(Optional.of(speciality));
+        // When
         Speciality found = service.findById(ID);
-
+        // Then
         assertThat(found).isNotNull();
         assertThat(found.getId()).isEqualTo(ID);
         assertThat(found.getDescription()).isEqualTo("test");
-        verify(specialtyRepository).findById(ID);
+        then(specialtyRepository).should().findById(ID);
     }
 
     @Test
     void testDelete() {
+        // Given
         Speciality speciality = new Speciality();
+        // When
         service.delete(speciality);
-        verify(specialtyRepository).delete(any(Speciality.class));
+        // Then
+        then(specialtyRepository).should().delete(any(Speciality.class));
     }
 
     @Test
     void testDeleteById() {
+        // When
         service.deleteById(ID);
         service.deleteById(ID);
-        verify(specialtyRepository, times(2)).deleteById(ID);
+        // Then
+        then(specialtyRepository).should(times(2)).deleteById(ID);
     }
 
     @Test
     void testDeleteByIdAtLeast() {
+        // When
         service.deleteById(ID);
         service.deleteById(ID);
-        verify(specialtyRepository, atLeastOnce()).deleteById(ID);
+        // Then
+        then(specialtyRepository).should(atLeastOnce()).deleteById(ID);
     }
 
     @Test
     void testDeleteByIdAtMost() {
+        // When
         service.deleteById(ID);
         service.deleteById(ID);
-        verify(specialtyRepository, atMost(5)).deleteById(ID);
+        // Then
+        then(specialtyRepository).should(atMost(5)).deleteById(ID);
     }
 
     @Test
     void testDeleteByIdNever() {
+        // When
         service.deleteById(ID);
         service.deleteById(ID);
-        verify(specialtyRepository, atLeastOnce()).deleteById(ID);
-        verify(specialtyRepository, never()).deleteById(5L);
+        // Then
+        then(specialtyRepository).should(atLeastOnce()).deleteById(ID);
+        then(specialtyRepository).should(never()).deleteById(5L);
     }
 }
