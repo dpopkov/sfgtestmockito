@@ -16,3 +16,7 @@
 * BDD Mockito
     * given(methodCall).willReturn(value)
     * then(mock).should().methodCall(arg)
+* Throwing Exceptions with Mockito
+    * Mockito.doThrow(Throwable).when(mock).methodCall()
+    * BDDMockito.given(methodCall).willThrow(Throwable)         -- if methodCall returns something
+    * BDDMockito.willThrow(Throwable).given(mock).methodCall()  -- if methodCall returns void
