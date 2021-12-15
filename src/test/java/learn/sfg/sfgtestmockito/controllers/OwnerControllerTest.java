@@ -6,9 +6,14 @@ import learn.sfg.sfgtestmockito.services.OwnerService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static learn.sfg.sfgtestmockito.controllers.OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 import static org.assertj.core.api.Assertions.*;
@@ -24,6 +29,8 @@ class OwnerControllerTest {
     OwnerController controller;
     @Mock
     BindingResult bindingResult;
+    @Captor
+    ArgumentCaptor<String> stringArgumentCaptor;
 
     @DisplayName("Process Creation Form when binding result has errors")
     @Test
@@ -50,5 +57,35 @@ class OwnerControllerTest {
         // Then
         then(ownerService).should().save(any(Owner.class));
         assertThat(viewName).isEqualTo("redirect:/owners/" + id);
+    }
+
+    @DisplayName("Process Find Form when no owners found")
+    @Test
+    void testProcessFindFormWildcardString() {
+        // Given
+        final String lastName = "Doe";
+        Owner owner = new Owner(1L, "Jane", lastName);
+        List<Owner> ownerList = new ArrayList<>();
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        given(ownerService.findAllByLastNameLike(captor.capture())).willReturn(ownerList);
+        // When
+        final String viewName = controller.processFindForm(owner, bindingResult, null);
+        // Then
+        assertThat(captor.getValue()).isEqualToIgnoringCase("%" + lastName + "%");
+        assertThat(viewName).isEqualTo("owners/findOwners");
+    }
+
+    @Test
+    void testProcessFindFormWildcardStringUsingAnnotatedField() {
+        // Given
+        final String lastName = "Doe";
+        Owner owner = new Owner(1L, "Jane", lastName);
+        List<Owner> ownerList = new ArrayList<>();
+        given(ownerService.findAllByLastNameLike(stringArgumentCaptor.capture())).willReturn(ownerList);
+        // When
+        final String viewName = controller.processFindForm(owner, bindingResult, null);
+        // Then
+        assertThat(stringArgumentCaptor.getValue()).isEqualToIgnoringCase("%" + lastName + "%");
+        assertThat(viewName).isEqualTo("owners/findOwners");
     }
 }
