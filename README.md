@@ -23,3 +23,5 @@
 * Java Lambda Argument Matchers
     * given(repository.save(__argThat__(arg -> arg.getValue().equals(VALUE)))).willReturn(savedObject);
 * Mockito Argument Capture: org.mockito.ArgumentCaptor
+* Mockito Answers
+    * given(methodCall).willAnswer(invocation -> {...})
