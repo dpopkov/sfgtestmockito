@@ -22,6 +22,7 @@ class SpecialitySDJpaServiceTest {
     SpecialitySDJpaService service;
 
     private static final long ID = 1L;
+    private static final int TIMEOUT_MILLIS = 10;
 
     @Test
     void testFindById() {
@@ -34,7 +35,7 @@ class SpecialitySDJpaServiceTest {
         assertThat(found).isNotNull();
         assertThat(found.getId()).isEqualTo(ID);
         assertThat(found.getDescription()).isEqualTo("test");
-        then(specialtyRepository).should().findById(ID);
+        then(specialtyRepository).should(timeout(TIMEOUT_MILLIS)).findById(ID);
     }
 
     @Test
@@ -53,7 +54,7 @@ class SpecialitySDJpaServiceTest {
         service.deleteById(ID);
         service.deleteById(ID);
         // Then
-        then(specialtyRepository).should(times(2)).deleteById(ID);
+        then(specialtyRepository).should(timeout(TIMEOUT_MILLIS).times(2)).deleteById(ID);
     }
 
     @Test
@@ -62,7 +63,7 @@ class SpecialitySDJpaServiceTest {
         service.deleteById(ID);
         service.deleteById(ID);
         // Then
-        then(specialtyRepository).should(atLeastOnce()).deleteById(ID);
+        then(specialtyRepository).should(timeout(TIMEOUT_MILLIS).atLeastOnce()).deleteById(ID);
     }
 
     @Test
@@ -80,7 +81,7 @@ class SpecialitySDJpaServiceTest {
         service.deleteById(ID);
         service.deleteById(ID);
         // Then
-        then(specialtyRepository).should(atLeastOnce()).deleteById(ID);
+        then(specialtyRepository).should(timeout(TIMEOUT_MILLIS).atLeastOnce()).deleteById(ID);
         then(specialtyRepository).should(never()).deleteById(5L);
     }
 

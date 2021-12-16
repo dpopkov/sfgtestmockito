@@ -8,10 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -29,6 +26,8 @@ class OwnerControllerWithAnswersTest {
     OwnerController controller;
     @Mock
     BindingResult bindingResult;
+    @Mock
+    Model model;
     @Captor
     ArgumentCaptor<String> stringArgumentCaptor;
 
@@ -79,10 +78,14 @@ class OwnerControllerWithAnswersTest {
         // Given
         final String lastName = "FindMe";
         Owner owner = new Owner(1L, "Jane", lastName);
+        InOrder inOrder = inOrder(ownerService, model);
         // When
-        final String viewName = controller.processFindForm(owner, bindingResult, mock(Model.class));
+        final String viewName = controller.processFindForm(owner, bindingResult, model);
         // Then
         assertThat(stringArgumentCaptor.getValue()).isEqualToIgnoringCase("%" + lastName + "%");
         assertThat(viewName).isEqualTo("owners/ownersList");
+        // InOrder asserts
+        inOrder.verify(ownerService).findAllByLastNameLike(anyString());
+        inOrder.verify(model).addAttribute(anyString(), anyList());
     }
 }

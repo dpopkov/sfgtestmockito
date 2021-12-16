@@ -25,3 +25,9 @@
 * Mockito Argument Capture: org.mockito.ArgumentCaptor
 * Mockito Answers
     * given(methodCall).willAnswer(invocation -> {...})
+* Verify Order of Interactions
+    * InOrder inOrder = Mockito.inOrder(mock1, mock2);  -- allows verifying in order
+    * inOrder.verify(mock1).methodCall();
+    * inOrder.verify(mock2).methodCall();
+* Verify Interactions within a specified time
+    * then(mock).should(timeout(100)).methodCall();
