@@ -31,3 +31,6 @@
     * inOrder.verify(mock2).methodCall();
 * Verify Interactions within a specified time
     * then(mock).should(timeout(100)).methodCall();
+* Verify Zero or No More interactions with mock
+    * verifyNoInteractions(mock)
+    * verifyNoMoreInteractions(mock)

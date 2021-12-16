@@ -55,10 +55,13 @@ class OwnerControllerWithAnswersTest {
         final String lastName = "Doe";
         Owner owner = new Owner(1L, "Jane", lastName);
         // When
-        final String viewName = controller.processFindForm(owner, bindingResult, null);
+        final String viewName = controller.processFindForm(owner, bindingResult, model);
         // Then
         assertThat(stringArgumentCaptor.getValue()).isEqualToIgnoringCase("%" + lastName + "%");
         assertThat(viewName).isEqualTo("redirect:/owners/1");
+        verify(ownerService).findAllByLastNameLike(anyString());
+        verifyNoMoreInteractions(ownerService);
+        verifyNoInteractions(model);
     }
 
     @Test
@@ -67,10 +70,13 @@ class OwnerControllerWithAnswersTest {
         final String lastName = "DontFindMe";
         Owner owner = new Owner(1L, "Jane", lastName);
         // When
-        final String viewName = controller.processFindForm(owner, bindingResult, null);
+        final String viewName = controller.processFindForm(owner, bindingResult, model);
         // Then
         assertThat(stringArgumentCaptor.getValue()).isEqualToIgnoringCase("%" + lastName + "%");
         assertThat(viewName).isEqualTo("owners/findOwners");
+        verify(ownerService).findAllByLastNameLike(anyString());
+        verifyNoMoreInteractions(ownerService);
+        verifyNoInteractions(model);
     }
 
     @Test
@@ -86,6 +92,9 @@ class OwnerControllerWithAnswersTest {
         assertThat(viewName).isEqualTo("owners/ownersList");
         // InOrder asserts
         inOrder.verify(ownerService).findAllByLastNameLike(anyString());
-        inOrder.verify(model).addAttribute(anyString(), anyList());
+        inOrder.verify(model, times(1)).addAttribute(anyString(), anyList());
+        verify(ownerService).findAllByLastNameLike(anyString());
+        verifyNoMoreInteractions(ownerService);
+        verifyNoMoreInteractions(model);
     }
 }
