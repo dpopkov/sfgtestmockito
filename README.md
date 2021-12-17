@@ -34,3 +34,7 @@
 * Verify Zero or No More interactions with mock
     * verifyNoInteractions(mock)
     * verifyNoMoreInteractions(mock)
+* Using Mockito Spy
+    * @org.mockito.Spy
+    * given(spy.methodCall()).willCallRealMethod()
+    * given(spy.methodCall()).willReturn(object)
